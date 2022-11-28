@@ -1,77 +1,61 @@
-# Игра Крестики-нолики для двух игроков
-pole = [1,2,3,
-        4,5,6,
-        7,8,9
-        ]
+print("*" * 10, " Игра Крестики-нолики для двух игроков ", "*" * 10)
+print("*" * 6, " Игровое поле совпадает с цифровой клавиатурой ", "*" * 6)
 
-ura_victory = [[0,1,2],
-               [3,4,5],
-               [6,7,8],
-               [0,3,6],
-               [1,4,7],
-               [3,6,9],
-               [0,4,8],
-               [2,4,6]
-               ]
-# рисуем поле битвы
-def pole_vidim():
-    print(pole[0], end=" ")# 1 линия
-    print(pole[1], end=" ")
-    print(pole[2])
+pole = list(range(1,10))
 
-    print(pole[3], end=" ")  # 2 линия
-    print(pole[4], end=" ")
-    print(pole[5])
+def draw_pole(pole):
+   print("-" * 13)
+   for i in reversed(range(3)):
+      print("|", pole[0+i*3], "|", pole[1+i*3], "|", pole[2+i*3], "|")
+      print("-" * 13)
 
-    print(pole[6], end=" ")  # 3 линия
-    print(pole[7], end=" ")
-    print(pole[8])
+def take_input(player_enters):
+   valid = False
+   while not valid:
+      player_answer = input("Куда поставим " + player_enters+"? ")
+      try:
+         player_answer = int(player_answer)
+      except:
+         print("Некорректный ввод. Вы уверены, что ввели число?")
+         continue
+      if player_answer >= 1 and player_answer <= 9:
+         if(str(pole[player_answer-1]) not in "XO"):
+            pole[player_answer-1] = player_enters
+            valid = True
+         else:
+            print("Эта клетка уже занята!")
+      else:
+        print("Некорректный ввод. Введите число от 1 до 9.")
 
-#функция обработки события выбора ячейки поля
-def napole(step,symbol):
-    ind = pole.index(step)
-    pole[ind] = symbol
+def check_win(pole):
+   win_line = ((0,1,2), (3,4,5), (6,7,8), (0,3,6), (1,4,7), (2,5,8), (0,4,8), (2,4,6))
+   for tt in win_line:
+       if pole[tt[0]] == pole[tt[1]] == pole[tt[2]]:
+          return pole[tt[0]]
+   return False
 
+def main(pole):
+    counter = 0
+    win = False
+    while not win:
+        draw_pole(pole)
+        if counter % 2 == 0:
+           take_input("X")
+        else:
+           take_input("O")
+        counter += 1
+        if counter > 4:
+           tmp = check_win(pole)
+           if tmp:
+              print(tmp, "выиграл!")
+              win = True
+              break
+        if counter == 9:
+            print("GAME OVER!!!")
+            print("Ничья!")
+            break
+    draw_pole(pole)
+main(pole)
 
-def get_result():
-    win = ""
+input("Нажмите Enter для выхода!")
 
-    for i in ura_victory:
-        if pole[i[0]] == "X" and pole[i[1]] == "X" and pole[i[2]] == "X":
-            win = "X"
-        if pole[i[0]] == "O" and pole[i[1]] == "O" and pole[i[2]] == "O":
-            win = "O"
-
-
-    return win
-
-
-# Основная программа
-game_over = False
-player1 = True
-
-while game_over == False:
-
-    # 1. Показываем карту
-    pole_vidim()
-
-    # 2. Спросим у играющего куда делать ход
-    if player1 == True:
-        symbol = "X"
-        step = int(input("Ход игрока № 1: "))
-    else:
-        symbol = "O"
-        step = int(input("Ход игрока № 2: "))
-
-    napole(step, symbol)  # делаем ход в указанную ячейку
-    win = get_result()  # определим победителя
-    if win != "":
-        game_over = True
-    else:
-        game_over = False
-
-    player1 = not (player1)
-
-# Игра окончена. Покажем карту. Объявим победителя.
-pole_vidim()
-print("Победил игрок играющий ", win)
