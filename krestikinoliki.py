@@ -1,13 +1,16 @@
 print("*" * 10, " Игра Крестики-нолики для двух игроков ", "*" * 10)
 print("*" * 6, " Игровое поле совпадает с цифровой клавиатурой ", "*" * 6)
-
+# Поле с цифрами от 1 до 9
 pole = list(range(1,10))
-
+# Рисуем поле 3х3 располагая цифры как на цифровой клавиатуре
 def draw_pole(pole):
    print("-" * 13)
    for i in reversed(range(3)):
       print("|", pole[0+i*3], "|", pole[1+i*3], "|", pole[2+i*3], "|")
       print("-" * 13)
+# Организовываем диалог с игроками в порядке очередности хода.
+# #Проверяем корректность ввода данных.
+# Исключаем повторение хода в занятую ячейку
 
 def take_input(player_enters):
    valid = False
@@ -27,6 +30,7 @@ def take_input(player_enters):
       else:
         print("Некорректный ввод. Введите число от 1 до 9.")
 
+# Организуем условия выигрыша
 def check_win(pole):
    win_line = ((0,1,2), (3,4,5), (6,7,8), (0,3,6), (1,4,7), (2,5,8), (0,4,8), (2,4,6))
    for tt in win_line:
@@ -34,6 +38,7 @@ def check_win(pole):
           return pole[tt[0]]
    return False
 
+# Текущий ход игры с счетчиком ходов
 def main(pole):
     counter = 0
     win = False
@@ -47,7 +52,7 @@ def main(pole):
         if counter > 4:
            tmp = check_win(pole)
            if tmp:
-              print(tmp, "выиграл!")
+              print(tmp, " <<<= выиграл! =>>>")
               win = True
               break
         if counter == 9:
